@@ -1,5 +1,8 @@
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import javafx.util.Pair;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,49 +15,84 @@ import java.awt.Color;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    private MarkingPieMenuModel model;
-    private MarkingPieMenuModel model2;
-    
+    private MarkingPieMenuModel menuColorPanel;
+    private MarkingPieMenuModel menuLabel;
+    private MarkingPieMenuModel menuConsol;
+
+    private ArrayList<Pair<String, String>> consolMsg;
+    private String filter;
+
     public MainFrame() {
         initComponents();
-        
-        model = new MarkingPieMenuModel(this);
-        model.addSection("1", new Color(0x5e98e1));
-        model.addSection("2", new Color(0x3f87e0));
-        model.addSection("3", new Color(0x82aee4));
-        model.addSection("4", new Color(0x6da1e2));
-        model.addSection("5", new Color(0xa5c1e3));
-        model.addSection("6", new Color(0x95b8e4));
-        model.addSection("7", new Color(0xcdd7e3));
-        model.addSection("8", new Color(0xb6cae3));
-        
-        model2 = new MarkingPieMenuModel(jPanel1);
-        model2.addSection("1", new Color(0x9bbf8b));
-        model2.addSection("2", new Color(0x7fb866));
-        model2.addSection("3", new Color(0xc7ddbe));
-        
-        model.addMarkingPieMenuListener(new MarkingPieMenuListener() {
-            
+
+        consolMsg = new ArrayList<Pair<String, String>>();
+        filter = "";
+
+        menuColorPanel = new MarkingPieMenuModel(this);
+        menuColorPanel.addSection("1", new Color(0x5e98e1));
+        menuColorPanel.addSection("2", new Color(0x3f87e0));
+        menuColorPanel.addSection("3", new Color(0x82aee4));
+        menuColorPanel.addSection("4", new Color(0x6da1e2));
+        menuColorPanel.addMarkingPieMenuListener(new MarkingPieMenuListener() {
             @Override
             public void markingPieMenuHighDoCommand(MarkingPieMenuEvent e) {
-                Section s = model.getSelectedSection();
-                paintTerminal(new String("MainPanel"), s);
+                Section s = (Section) e.getSource();
+                String msg = "ColorPanel [" + s.getNumber() + "] - " + s.getName() + "\n";
+                consolMsg.add(new Pair<>("ColorPanel", msg));
+                paintTerminal();
             }
         });
 
-        model2.addMarkingPieMenuListener(new MarkingPieMenuListener() {
+        menuLabel = new MarkingPieMenuModel(jPanel1);
+        menuLabel.addSection("1", new Color(0x9bbf8b));
+        menuLabel.addSection("2", new Color(0x7fb866));
+        menuLabel.addSection("3", new Color(0xc7ddbe));
+
+        menuLabel.addMarkingPieMenuListener(new MarkingPieMenuListener() {
 
             @Override
             public void markingPieMenuHighDoCommand(MarkingPieMenuEvent e) {
-                Section s = model.getSelectedSection();
-                paintTerminal(new String("GreenPanel"), s);
+                Section s = (Section) e.getSource();
+                String msg = "Label [" + s.getNumber() + "] - " + s.getName() + "\n";
+                consolMsg.add(new Pair<>("Label", msg));
+                paintTerminal();
+            }
+        });
+
+        menuColorPanel = new MarkingPieMenuModel(jTextArea1);
+        menuColorPanel.addSection("Color Panel", new Color(0x404040));
+        menuColorPanel.addSection("Label", new Color(0x767676));
+        menuColorPanel.addSection("ALL", new Color(0x5f5f5f));
+        menuColorPanel.addMarkingPieMenuListener(new MarkingPieMenuListener() {
+
+            @Override
+            public void markingPieMenuHighDoCommand(MarkingPieMenuEvent e) {
+                Section s = (Section) e.getSource();
+                if (s.getName().contains("Color Panel")) {
+                    filter = "ColorPanel";
+                } else if (s.getName().contains("Label")) {
+                    filter = "Label";
+                } else {
+                    filter = "";
+                }
+                paintTerminal();
             }
         });
     }
-    
-    private void paintTerminal(String caller, Section s){
-        String msg = jTextArea1.getText() + caller +  " [" + s.getNumber() + "] - " + s.getName() + "\n> ";
-        jTextArea1.setText(msg);
+
+    private void paintTerminal() {
+        String txt = "";
+        jTextArea1.setText("");
+        for (Pair p : consolMsg) {
+            if (filter == "") {
+                txt += "> " + p.getValue();
+            } else if (filter.contains((CharSequence) p.getKey())) {
+                txt += "> " + p.getValue();
+            }
+
+        }
+        txt += "> ";
+        jTextArea1.setText(txt);
     }
 
     /**
@@ -90,12 +128,12 @@ public class MainFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 180, Short.MAX_VALUE)
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 180, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 53, Short.MAX_VALUE)
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 53, Short.MAX_VALUE)
         );
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -103,33 +141,33 @@ public class MainFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(98, 98, 98)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addGap(98, 98, 98)
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(65, 65, 65)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(90, Short.MAX_VALUE))
-            .addComponent(jSeparator2)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                        .addGap(60, 60, 60)
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(65, 65, 65)
+                                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(90, Short.MAX_VALUE))
+                .addComponent(jSeparator2)
         );
 
         pack();

@@ -89,7 +89,7 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
 
     private void fireAllMarkingPieMenuHighDoCommand() {
         for (MarkingPieMenuListener l : listeners) {
-            l.markingPieMenuHighDoCommand(new MarkingPieMenuEvent(this));
+            l.markingPieMenuHighDoCommand(new MarkingPieMenuEvent(selectedSection));
         }
     }
 

@@ -60,7 +60,6 @@ public class MarkingPieMenuViewTest extends javax.swing.JComponent implements Ma
         this.mouseY = mouseY;
     }
     
-    
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(outerSize*2, outerSize*2);

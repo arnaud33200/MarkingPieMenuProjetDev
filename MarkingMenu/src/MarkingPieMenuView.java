@@ -8,18 +8,16 @@
  * @author fornervi
  */
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 
 public class MarkingPieMenuView extends JComponent {
 
@@ -34,6 +32,14 @@ public class MarkingPieMenuView extends JComponent {
         this.slices = sections;
         this.INNERCIRCLESIZE = INNERCIRCLESIZE;
         this.OUTERCIRCLESIZE = OUTERCIRCLESIZE;
+        setSize(OUTERCIRCLESIZE, OUTERCIRCLESIZE);
+        
+        this.repaint();
+    }
+    
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(OUTERCIRCLESIZE, OUTERCIRCLESIZE);
     }
 
     public void highlightSection(int sliceIndice) {
