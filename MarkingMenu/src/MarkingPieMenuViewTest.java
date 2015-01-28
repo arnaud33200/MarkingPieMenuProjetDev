@@ -23,13 +23,15 @@ import javax.swing.JPanel;
  *
  * @author ladoucar
  */
-public class MarkingPieMenuViewTest extends javax.swing.JComponent {
+public class MarkingPieMenuViewTest extends javax.swing.JComponent implements MarkingPieMenuViewInterface {
 
     private int innerSize;
     private int outerSize;
     
     private int mouseX;
     private int mouseY;
+    
+    private int highlight;
     
     private ArrayList<Section> sections;
 
@@ -39,6 +41,7 @@ public class MarkingPieMenuViewTest extends javax.swing.JComponent {
 
     public MarkingPieMenuViewTest(int innerSize, int outerSize, ArrayList<Section> sections) {
         super();
+        highlight = -1;
         this.setBackground(new Color(0, 0, 0, 0));
         this.innerSize = innerSize;
         this.outerSize = outerSize;
@@ -95,7 +98,10 @@ public class MarkingPieMenuViewTest extends javax.swing.JComponent {
                     
                     float angle = getAngle(firstPoint, new Point(x,y));
                     Section selectedSection = findSection(x, y);
-                    g.setColor(selectedSection.getColor());
+                    g.setColor(selectedSection.getColor().darker());
+                    if (selectedSection.getNumber() == highlight) {
+                        g.setColor(selectedSection.getColor());
+                    }
                     g.fillRect(x, y, 1, 1);
                     if (x > 100 && y > 100) {
                         int i = 3;
@@ -152,6 +158,12 @@ public class MarkingPieMenuViewTest extends javax.swing.JComponent {
             bot = s.getAngle();
         }
        return selectedSection;
+    }
+
+    @Override
+    public void highlight(int n) {
+        highlight = n;
+        repaint();
     }
     
     

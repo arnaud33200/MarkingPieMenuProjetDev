@@ -1,19 +1,12 @@
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.stage.Popup;
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
 
@@ -40,6 +33,8 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
 
     private boolean in;
 
+    private ArrayList<MarkingPieMenuListener> listeners;
+
     enum STATEMENU {
 
         IDLE, MARKING, SHOW, HIDE, MENU
@@ -55,23 +50,47 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
 
     private ArrayList<Section> sections;
     private Section selectedSection;
-    private MarkingPieMenuViewTest myPieView;
+    private MarkingPieMenuView myPieView;
 
     public MarkingPieMenuModel(Component c) {
         sections = new ArrayList<>();
+        listeners = new ArrayList<>();
         myComponent = c;
         myRootComponent = SwingUtilities.getRoot(c);
-        
+
         myPopup = null;
-        myPieView = new MarkingPieMenuViewTest(INNERCIRCLESIZE, OUTERCIRCLESIZE, sections);
-        
+        //myPieView = new MarkingPieMenuViewTest(INNERCIRCLESIZE, OUTERCIRCLESIZE, sections);
+        myPieView = new MarkingPieMenuView(INNERCIRCLESIZE*2, OUTERCIRCLESIZE*2, sections);
+
         myComponent.addMouseListener(this);
         myComponent.addMouseMotionListener(this);
-        
+
         myPieView.addMouseListener(this);
         myPieView.addMouseMotionListener(this);
-        
+
         state = STATEMENU.IDLE;
+    }
+
+    public ArrayList<Section> getSections() {
+        return sections;
+    }
+
+    public Section getSelectedSection() {
+        return selectedSection;
+    }
+
+    public void addMarkingPieMenuListener(MarkingPieMenuListener l) {
+        listeners.add(l);
+    }
+
+    public void removeMarkingPieMenuListener(MarkingPieMenuListener l) {
+        listeners.remove(l);
+    }
+
+    private void fireAllMarkingPieMenuHighDoCommand() {
+        for (MarkingPieMenuListener l : listeners) {
+            l.markingPieMenuHighDoCommand(new MarkingPieMenuEvent(this));
+        }
     }
 
     public void addSection(String n, Color c) {
@@ -90,12 +109,13 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
                 msg += "[" + angle + "] - ";
                 angle += interval;
             }
-            printDebug(msg);
+            //printDebug(msg);
         }
     }
 
     private void doCommand() {
         printDebug("DO COMMANDE : " + selectedSection.getName());
+        fireAllMarkingPieMenuHighDoCommand();
     }
 
     private void hideMenu() {
@@ -104,18 +124,17 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
         }
         printDebug("HIDE");
     }
-    
+
     private void highlight() {
-        
+        myPieView.highlightSection(selectedSection.getNumber());
     }
 
     private void showMenu() {
         int mx = gMouse.getLocationOnScreen().x - OUTERCIRCLESIZE;
         int my = gMouse.getLocationOnScreen().y - OUTERCIRCLESIZE;
-        myPieView.setMouseX(mx);
-        myPieView.setMouseY(my);
+        //myPieView.setMouseX(mx);
+       // myPieView.setMouseY(my);
         myPopup = PopupFactory.getSharedInstance().getPopup(gMouse.getComponent(), myPieView, mx, my);
-
         myPopup.show();
         printDebug("SHOW MENU");
     }
@@ -136,7 +155,7 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
     }
 
     private void findSection(MouseEvent e) {
-        float angle = getAngle(firstPoint, new Point(e.getX(), e.getY()));
+        float angle = getAngle(firstPoint, new Point(e.getLocationOnScreen().x, e.getLocationOnScreen().y));
         selectedSection = sections.get(sections.size() - 1);
         float bot = (float) 0.0;
         for (Section s : sections) {
@@ -145,10 +164,6 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
             }
             bot = s.getAngle();
         }
-
-        /* Graphics g = e.getComponent().getGraphics();
-         g.setColor(selectedSection.getColor());
-         g.fillRect(e.getX(), e.getY(), 5, 5);*/
     }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -283,8 +298,8 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
                 break;
         }
     }
-    
-      @Override
+
+    @Override
     public void mouseMoved(MouseEvent e) {
         switch (state) {
             case IDLE:
@@ -305,15 +320,11 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
                 break;
         }
     }
-    
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-  
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @Override
     public void mouseClicked(MouseEvent e) {
     }
-
 
     private float getAngle(Point p1, Point p2) {
         int mouseX = p2.x - p1.x;
