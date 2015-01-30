@@ -23,23 +23,20 @@ import javax.swing.JPanel;
  *
  * @author ladoucar
  */
-public class MarkingPieMenuViewTest extends javax.swing.JComponent implements MarkingPieMenuViewInterface {
+public class MarkingPieMenuViewTransparent extends MarkingPieMenuView {
 
     private int innerSize;
     private int outerSize;
-    
-    private int mouseX;
-    private int mouseY;
     
     private int highlight;
     
     private ArrayList<Section> sections;
 
-    public MarkingPieMenuViewTest() {
+    public MarkingPieMenuViewTransparent() {
         this(50,150, null);
     }
 
-    public MarkingPieMenuViewTest(int innerSize, int outerSize, ArrayList<Section> sections) {
+    public MarkingPieMenuViewTransparent(int innerSize, int outerSize, ArrayList<Section> sections) {
         super();
         highlight = -1;
         this.setBackground(new Color(0, 0, 0, 0));
@@ -52,14 +49,6 @@ public class MarkingPieMenuViewTest extends javax.swing.JComponent implements Ma
         this.repaint();
     }
 
-    public void setMouseX(int mouseX) {
-        this.mouseX = mouseX;
-    }
-
-    public void setMouseY(int mouseY) {
-        this.mouseY = mouseY;
-    }
-    
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(outerSize*2, outerSize*2);
@@ -73,7 +62,7 @@ public class MarkingPieMenuViewTest extends javax.swing.JComponent implements Ma
         try {
             robot = new Robot();
         } catch (AWTException ex) {
-            Logger.getLogger(MarkingPieMenuViewTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MarkingPieMenuViewTransparent.class.getName()).log(Level.SEVERE, null, ex);
         }
         BufferedImage screen = robot.createScreenCapture(new Rectangle(mouseX, mouseY, outerSize*2 ,outerSize*2));
 

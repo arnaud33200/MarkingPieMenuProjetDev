@@ -33,6 +33,7 @@ public class MainFrame extends javax.swing.JFrame {
         menuColorPanel.addSection("Rouge", new Color(0xea6d6d));
         menuColorPanel.addSection("Jaune", new Color(0xf2f05f));
         menuColorPanel.addSection("Violet", new Color(0xc08dd8));
+        menuColorPanel.setMyPieView(new MarkingPieMenuViewTransparent(MarkingPieMenuModel.INNERCIRCLESIZE, MarkingPieMenuModel.OUTERCIRCLESIZE, menuColorPanel.getSections()));
         menuColorPanel.addMarkingPieMenuListener(new MarkingPieMenuListener() {
             @Override
             public void markingPieMenuHighDoCommand(MarkingPieMenuEvent e) {

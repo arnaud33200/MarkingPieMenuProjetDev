@@ -27,8 +27,8 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
 
     private static boolean DEBUGMODE = true;
 
-    public int INNERCIRCLESIZE = 40;
-    public int OUTERCIRCLESIZE = 100;
+    public static int INNERCIRCLESIZE = 40;
+    public static int OUTERCIRCLESIZE = 100;
     private static int WAITTIME = 1000;
 
     private boolean in;
@@ -60,7 +60,7 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
 
         myPopup = null;
         //myPieView = new MarkingPieMenuViewTest(INNERCIRCLESIZE, OUTERCIRCLESIZE, sections);
-        myPieView = new MarkingPieMenuView(INNERCIRCLESIZE*2, OUTERCIRCLESIZE*2, sections);
+        myPieView = new MarkingPieMenuViewClassic(INNERCIRCLESIZE*2, OUTERCIRCLESIZE*2, sections);
 
         myComponent.addMouseListener(this);
         myComponent.addMouseMotionListener(this);
@@ -71,6 +71,12 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
         state = STATEMENU.IDLE;
     }
 
+    public void setMyPieView(MarkingPieMenuView myPieView) {
+        this.myPieView = myPieView;
+        myPieView.addMouseListener(this);
+        myPieView.addMouseMotionListener(this);
+    }
+    
     public ArrayList<Section> getSections() {
         return sections;
     }
@@ -126,14 +132,15 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
     }
 
     private void highlight() {
-        myPieView.highlightSection(selectedSection.getNumber());
+        myPieView.highlight(selectedSection.getNumber());
     }
 
     private void showMenu() {
         int mx = gMouse.getLocationOnScreen().x - OUTERCIRCLESIZE;
         int my = gMouse.getLocationOnScreen().y - OUTERCIRCLESIZE;
-        //myPieView.setMouseX(mx);
-       // myPieView.setMouseY(my);
+        myPieView.setMouseX(mx);
+       myPieView.setMouseY(my);
+        myPieView.setOpaque(false);
         myPopup = PopupFactory.getSharedInstance().getPopup(gMouse.getComponent(), myPieView, mx, my);
         myPopup.show();
         printDebug("SHOW MENU");
