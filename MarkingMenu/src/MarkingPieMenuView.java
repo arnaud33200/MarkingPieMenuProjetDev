@@ -8,7 +8,8 @@
  * @author ladoucar
  */
 public abstract class MarkingPieMenuView extends javax.swing.JComponent {
-    
+   
+// coordonnée de la sourie pour construire une fausse transparence
     protected int mouseX;
     protected int mouseY;
     

@@ -59,6 +59,7 @@ public class MarkingPieMenuViewClassic extends MarkingPieMenuView {
             startAngle = (int) (curValue * 360 / total);
             int arcAngle = (int) (360 / total);
 
+// une section est foncé lorsqu'elle n'est pas selectionné
             g2d.setColor(slices.get(i).getColor().darker());
             if (highlight == i) {
                 g2d.setColor(slices.get(i).getColor());

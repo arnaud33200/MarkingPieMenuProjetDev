@@ -33,6 +33,7 @@ public class MainFrame extends javax.swing.JFrame {
         menuColorPanel.addSection("Rouge", new Color(0xea6d6d));
         menuColorPanel.addSection("Jaune", new Color(0xf2f05f));
         menuColorPanel.addSection("Violet", new Color(0xc08dd8));
+// menu avec bord transparent sans text 
         menuColorPanel.setMyPieView(new MarkingPieMenuViewTransparent(MarkingPieMenuModel.INNERCIRCLESIZE, MarkingPieMenuModel.OUTERCIRCLESIZE, menuColorPanel.getSections()));
         menuColorPanel.addMarkingPieMenuListener(new MarkingPieMenuListener() {
             @Override
@@ -51,8 +52,8 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         menuLabel = new MarkingPieMenuModel(jLabel1);
-        menuLabel.addSection("Vicent", new Color(0xf2dd68));
-        menuLabel.addSection("Arnaud", new Color(0xf58ad8));
+        menuLabel.addSection("Vicent", new Color(0x36c936));
+        menuLabel.addSection("Arnaud", new Color(0xa56934));
         menuLabel.addMarkingPieMenuListener(new MarkingPieMenuListener() {
 
             @Override

@@ -25,7 +25,7 @@ import javax.swing.SwingUtilities;
  newpopup.hide();*/
 public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
 
-    private static boolean DEBUGMODE = true;
+    private static boolean DEBUGMODE = false;
 
     public static int INNERCIRCLESIZE = 40;
     public static int OUTERCIRCLESIZE = 100;

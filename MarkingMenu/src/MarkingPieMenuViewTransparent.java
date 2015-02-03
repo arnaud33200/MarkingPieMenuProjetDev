@@ -91,11 +91,7 @@ public class MarkingPieMenuViewTransparent extends MarkingPieMenuView {
                         g.setColor(selectedSection.getColor());
                     }
                     g.fillRect(x, y, 1, 1);
-                    if (x > 100 && y > 100) {
-                        int i = 3;
-                    }
                 } else {
-                    
         // Le pixel n'appartient pas au pie
         // on paint le pixel du screen shot pour faire la transparence
                     g.setColor(new Color(screen.getRGB(x, y)));
@@ -104,8 +100,8 @@ public class MarkingPieMenuViewTransparent extends MarkingPieMenuView {
 
             }
         }
-        g.setColor(Color.DARK_GRAY);
-        g.fillOval(xi-2, yi-2, (innerSize*2)+2, (innerSize*2)+2);
+        //g.setColor(Color.DARK_GRAY);
+       // g.fillOval(xi-2, yi-2, (innerSize*2)+2, (innerSize*2)+2);
     }
     
     private float getAngle(Point p1, Point p2) {
@@ -140,7 +136,7 @@ public class MarkingPieMenuViewTransparent extends MarkingPieMenuView {
         Section selectedSection = sections.get(sections.size()-1);
         float bot = (float) 0.0; 
        for (Section s : sections) {
-            if (angle > bot && angle <= s.getAngle()) {
+            if (angle >= bot && angle <= s.getAngle()) {
                 selectedSection = s;
             }
             bot = s.getAngle();
