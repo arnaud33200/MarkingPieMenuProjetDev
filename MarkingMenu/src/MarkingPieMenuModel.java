@@ -8,21 +8,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.PopupFactory;
-import javax.swing.SwingUtilities;
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author ladoucar
- */
-/*newpopup = PopupFactory.getSharedInstace().getPopup(invoker, composantToPopup,x,y);
- newpopup.show();
- newpopup.hide();*/
 public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
 
     private static boolean DEBUGMODE = false;
@@ -36,7 +22,6 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
     private ArrayList<MarkingPieMenuListener> listeners;
 
     enum STATEMENU {
-
         IDLE, MARKING, SHOW, HIDE, MENU
     };
     STATEMENU state;
@@ -45,7 +30,6 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
 
     private MouseEvent gMouse;
     private Component myComponent;
-    private Component myRootComponent;
     private javax.swing.Popup myPopup;
 
     private ArrayList<Section> sections;
@@ -56,12 +40,11 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
         sections = new ArrayList<>();
         listeners = new ArrayList<>();
         myComponent = c;
-        myRootComponent = SwingUtilities.getRoot(c);
 
         myPopup = null;
-        //myPieView = new MarkingPieMenuViewTest(INNERCIRCLESIZE, OUTERCIRCLESIZE, sections);
         myPieView = new MarkingPieMenuViewClassic(INNERCIRCLESIZE*2, OUTERCIRCLESIZE*2, sections);
 
+// ajout du clic sur le composant en question
         myComponent.addMouseListener(this);
         myComponent.addMouseMotionListener(this);
 
@@ -72,6 +55,8 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
     }
 
     public void setMyPieView(MarkingPieMenuView myPieView) {
+        myPieView.removeMouseListener(this);
+        myPieView.removeMouseMotionListener(this);
         this.myPieView = myPieView;
         myPieView.addMouseListener(this);
         myPieView.addMouseMotionListener(this);
@@ -115,7 +100,7 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
                 msg += "[" + angle + "] - ";
                 angle += interval;
             }
-            //printDebug(msg);
+            printDebug(msg);
         }
     }
 
@@ -173,8 +158,9 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
         }
     }
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // MACHINE A ETAT
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     public void startTimer() {
         printDebug("MARKING WAITING ...");
         t = new Timer();
@@ -329,10 +315,10 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
     }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
 
+// retourne une valeur entre 0.0 et 0.99
+// retourne 0.0 si l'angle entre (p1;p2) et (p1;p0) est de 0°
+// retourne 0.5 si l'angle entre (p1;p2) et (p1;p0) est de 180°
     private float getAngle(Point p1, Point p2) {
         int mouseX = p2.x - p1.x;
         int mouseY = p2.y - p1.y;
@@ -358,10 +344,16 @@ public class MarkingPieMenuModel implements MouseMotionListener, MouseListener {
 
         return (float) (theta / (2 * Math.PI));
     }
+    
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @Override
     public void mouseEntered(MouseEvent e) {
 
+    }
+    
+    @Override
+    public void mouseClicked(MouseEvent e) {
     }
 
     @Override

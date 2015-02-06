@@ -1,18 +1,8 @@
-
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javafx.util.Pair;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author ladoucar
- */
+
 public class MainFrame extends javax.swing.JFrame {
 
     private MarkingPieMenuModel menuColorPanel;
@@ -122,6 +112,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jScrollPane1.setBackground(new java.awt.Color(0, 0, 0));
 
